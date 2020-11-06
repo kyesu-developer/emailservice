@@ -4,7 +4,8 @@ const FormData = require('form-data');
 const { google } = require('googleapis');
 const { createIssue } = require('./createIssue');
 const { createAttachment } = require('./createAttachment');
-const { urlString } = require('./constants');
+const { doPostSlack } = require('./postSlack');
+const { urlString,slackUrl, bugUrl } = require('./constants');
 const SCOPES = [ 'https://www.googleapis.com/auth/gmail.readonly' ];
 const TOKEN_PATH = 'token.json';
 const tok = 'kyr.tasks@gmail.com' + ':' + 'wedlRbYv7Gov48u310c30E1A';
@@ -115,7 +116,8 @@ function getRecentEmail(auth) {
 								urlString + jira_issue_id + '/attachments',
 								formData,
 								formHeaders
-							);
+              );
+              await doPostSlack(slackUrl,{text:bugUrl+jira_issue_id})
 							console.log('Sample attachment added');
 						}
 					}
